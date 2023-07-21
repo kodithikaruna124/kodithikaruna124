@@ -1,0 +1,48 @@
+# Without proxy server implementation
+             import requests
+             response=requests.get(“https://neuralnine.com”);
+             print(response.text)
+       # Rotation of IP address using proxies in python:
+            import requests
+import random
+from bs4 import BeautifulSoup as bs
+def get_free_proxies():
+    url = "https://free-proxy-list.net/"
+    # get the HTTP response and construct soup object
+    soup = bs(requests.get(url).content, "html.parser")
+    proxies = []
+    for row in soup.find("table", attrs={"id": "proxylisttable"}).find_all("tr")[1:]:
+        tds = row.find_all("td")
+        try:
+            ip = tds[0].text.strip()
+            port = tds[1].text.strip()
+            host = f"{ip}:{port}"
+            proxies.append(host)
+        except IndexError:
+            continue
+    return proxies
+def get_session(proxies):
+    # construct an HTTP session
+    session = requests.Session()
+    # choose one random proxy
+    proxy = random.choice(proxies)
+    session.proxies = {"http": proxy, "https": proxy}
+    return session
+proxies=[
+    '80.252.5.34:7001',
+    '216.238.74.186:3128',
+    '190.186.18.161:999',
+    '94.23.186.25:8080',
+    '18.232.136.79:9999',
+    '185.248.12.38:9090',
+    '145.40.121.21:3128',
+    '106.14.255.124:80',
+    '118.107.44.181:8000',
+    '185.191.76.84::80',
+    ]
+for i in range(5):
+    s = get_session(proxies)
+    try:
+        print("Request page with IP:", s.get("http://icanhazip.com", timeout=1.5).text.strip())
+            except Exception as e:
+        continue
